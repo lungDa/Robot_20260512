@@ -5,7 +5,7 @@ import google.generativeai as genai
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('Gemini 3.1 Flash TTS')
+    model = genai.GenerativeModel("Gemini-3.1-Flash-TTS")
 
 except Exception as e:
     st.error(f"金鑰設定錯誤: {e}")
