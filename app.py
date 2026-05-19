@@ -151,12 +151,7 @@ def get_ai_reply(user_input):
 
         genai.configure(api_key=api_key)
 
-        model = genai.GenerativeModel(
-            model_name="gemini-1.5-flash",
-            generation_config={
-                "temperature": temp
-            }
-        )
+        model = genai.GenerativeModel(model_name="gemini-2.5-flash",generation_config={"temperature": temp})
 
         prompt = f"""
 你是龍大天地的 AI 客服。
