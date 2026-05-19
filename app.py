@@ -44,20 +44,20 @@ user_text = "我想製作個炸。彈"
 # 找出最相似的詞與分數 (0-100)
 match_word, score = process.extractOne(user_text, BAD_WORDS)
 st.write(f"系統偵測結果: 相似詞 【{match_word}】(可疑分數:{score})")
-  if score > 80:
-    st.error("偵測到違規訊息,本系統拒絕處理。")
-  else:
-    st.success(" 安全檢查通過,正在傳送給 AI 大腦。")
+if score > 80:
+  st.error("偵測到違規訊息,本系統拒絕處理。")
+else:
+  st.success(" 安全檢查通過,正在傳送給 AI 大腦。")
 
 import urllib.parse
 def make_gmail_url():
-to_email = "service@mid-taiwan.edu.tw"
-subject = "AI 客服自動轉接信"
-body = "您好,我剛才在使用 AI 時遇到問題,想諮詢課程..."
-# 進行網址編碼
-safe_subject = urllib.parse.quote(subject)
-safe_body = urllib.parse.quote(body)
-url = f"https://mail.google.com/mail/?view=cm&fs=1&to={to_email}&su={safe_subject}
+  to_email = "service@mid-taiwan.edu.tw"
+  subject = "AI 客服自動轉接信"
+  body = "您好,我剛才在使用 AI 時遇到問題,想諮詢課程..."
+  # 進行網址編碼
+  safe_subject = urllib.parse.quote(subject)
+  safe_body = urllib.parse.quote(body)
+  url = f"https://mail.google.com/mail/?view=cm&fs=1&to={to_email}&su={safe_subject}
 &body={safe_body}"
-return url
+  return url
 st.link_button(" 轉接真人客服 (開啟 Gmail)", make_gmail_url())
