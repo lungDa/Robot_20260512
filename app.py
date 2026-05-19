@@ -33,7 +33,7 @@ import time
 st.set_page_config(
     page_title="AI客服-電技部",
     page_icon="💻",
-    layout="wide"
+    layout="centered"
 )
 
 # =========================
