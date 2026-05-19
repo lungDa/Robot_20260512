@@ -266,42 +266,42 @@ AI 回答失敗次數：{st.session_state.fail_count}
 # =========================
 # 寄送對話紀錄給客服
 # =========================
-def send_report_to_service():
-    smtp_host = st.secrets.get("SMTP_HOST", "")
-    smtp_port = int(st.secrets.get("SMTP_PORT", 587))
-    smtp_user = st.secrets.get("SMTP_USER", "")
-    smtp_password = st.secrets.get("SMTP_PASSWORD", "")
-    service_email = st.secrets.get("SERVICE_EMAIL", "")
-
-    if not smtp_host or not smtp_user or not smtp_password or not service_email:
-        return False, "SMTP 設定不完整，請檢查 Streamlit Secrets。"
-
-    info = st.session_state.customer_info
-
-    subject = (
-        f"AI客服對話紀錄 - {info.get('company', '')} - "
-        f"{st.session_state.problem_category}"
-    )
-
-    body = build_conversation_report()
-
-    msg = MIMEMultipart()
-    msg["From"] = smtp_user
-    msg["To"] = service_email
-    msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain", "utf-8"))
-
-    try:
-        with smtplib.SMTP(smtp_host, smtp_port) as server:
-            server.starttls()
-            server.login(smtp_user, smtp_password)
-            server.send_message(msg)
-
-        st.session_state.report_sent = True
-        return True, "對話紀錄已成功寄送給客服。"
-
-    except Exception as e:
-        return False, f"寄送失敗：{e}"
+#def send_report_to_service():
+#    smtp_host = st.secrets.get("SMTP_HOST", "")
+#    smtp_port = int(st.secrets.get("SMTP_PORT", 587))
+#    smtp_user = st.secrets.get("SMTP_USER", "")
+#    smtp_password = st.secrets.get("SMTP_PASSWORD", "")
+#    service_email = st.secrets.get("SERVICE_EMAIL", "")
+#
+#    if not smtp_host or not smtp_user or not smtp_password or not service_email:
+#        return False, "SMTP 設定不完整，請檢查 Streamlit Secrets。"
+#
+#    info = st.session_state.customer_info
+#
+#    subject = (
+#        f"AI客服對話紀錄 - {info.get('company', '')} - "
+#        f"{st.session_state.problem_category}"
+#    )
+#
+#    body = build_conversation_report()
+#
+#    msg = MIMEMultipart()
+#    msg["From"] = smtp_user
+#    msg["To"] = service_email
+#    msg["Subject"] = subject
+#    msg.attach(MIMEText(body, "plain", "utf-8"))
+#
+#    try:
+#        with smtplib.SMTP(smtp_host, smtp_port) as server:
+#            server.starttls()
+#            server.login(smtp_user, smtp_password)
+#            server.send_message(msg)
+#
+#        st.session_state.report_sent = True
+#        return True, "對話紀錄已成功寄送給客服。"
+#
+#    except Exception as e:
+#        return False, f"寄送失敗：{e}"
 
 # =========================
 # 判斷 AI 是否回答失敗
