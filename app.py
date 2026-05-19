@@ -8,7 +8,7 @@ layout="wide" # "wide" 可利用全螢幕寬度,適合放置儀表板
 )
 
 with st.sidebar:
-  st.image("https://via.placeholder.com/150", caption="電力技術部")
+  st.image("https://https://www.retech.com.tw/", caption="電力技術部")
   st.title("系統控制台")
   # 建立下拉選單讓使用者切換服務
   service_type = st.selectbox(
