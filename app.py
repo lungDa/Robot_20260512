@@ -1,3 +1,4 @@
+pip install thefuzz python-Levenshtein
 import streamlit as st
 import google.generativeai as genai
 # 頁面初始化設定
