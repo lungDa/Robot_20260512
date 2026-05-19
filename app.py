@@ -31,7 +31,7 @@ import time
 # 頁面設定
 # =========================
 st.set_page_config(
-    page_title="AI客服 - 龍大天地",
+    page_title="AI客服",
     page_icon="💻",
     layout="wide"
 )
