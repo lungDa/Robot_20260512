@@ -488,23 +488,23 @@ st.divider()
 
 col1, col2 = st.columns(2)
 
-with col1:
-    if st.button("結束對話並寄送客服紀錄"):
-        if not st.session_state.messages:
-            st.warning("目前沒有對話紀錄可以寄送。")
-        elif st.session_state.report_sent:
-            st.info("此筆對話紀錄已經寄送過客服。")
-        else:
-            success, message = send_report_to_service()
-
-            if success:
-                st.success(message)
-            else:
-                st.error(message)
-
-with col2:
-    if st.session_state.report_sent:
-        st.success("客服紀錄已寄送")
+#with col1:
+#    if st.button("結束對話並寄送客服紀錄"):
+#        if not st.session_state.messages:
+#            st.warning("目前沒有對話紀錄可以寄送。")
+#        elif st.session_state.report_sent:
+#            st.info("此筆對話紀錄已經寄送過客服。")
+#        else:
+#            success, message = send_report_to_service()
+#
+#            if success:
+#                st.success(message)
+#            else:
+#                st.error(message)
+#
+#with col2:
+#    if st.session_state.report_sent:
+#        st.success("客服紀錄已寄送")
 
 # =========================
 # Chat Input 對話輸入區
