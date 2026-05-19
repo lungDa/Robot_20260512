@@ -20,3 +20,5 @@ with st.sidebar:
   
   st.divider() # 畫出一條美觀的分隔線
   st.info(f"當前連線:{service_type}")
+
+
