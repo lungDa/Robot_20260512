@@ -57,7 +57,6 @@ def make_gmail_url():
   # 進行網址編碼
   safe_subject = urllib.parse.quote(subject)
   safe_body = urllib.parse.quote(body)
-  url = f"https://mail.google.com/mail/?view=cm&fs=1&to={to_email}&su={safe_subject}
-&body={safe_body}"
+  url = f"https://mail.google.com/mail/?view=cm&fs=1&to={to_email}&su={safe_subject}&body={safe_body}"
   return url
 st.link_button(" 轉接真人客服 (開啟 Gmail)", make_gmail_url())
