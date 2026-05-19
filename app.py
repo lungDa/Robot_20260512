@@ -144,7 +144,7 @@ def make_gmail_url(user_question=""):
 # =========================
 def get_ai_reply(user_input):
     try:
-        api_key = st.secrets.get("GEMINI_API_KEY", None)
+        api_key = st.secrets.get("AIzaSyCd7jNF-4YsLLuyk4BimgIJNGg6b4sYrn0", None)
 
         if not api_key:
             return "目前尚未設定 Gemini API Key，因此先使用系統預設回覆。請到 Streamlit Secrets 新增 GEMINI_API_KEY。"
