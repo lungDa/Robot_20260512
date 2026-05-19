@@ -3,7 +3,7 @@ import google.generativeai as genai
 # 頁面初始化設定
 st.set_page_config(
 page_title="AI客服 -龍大天地",
-page_icon="",
+page_icon="logo_w",
 layout="wide" # "wide" 可利用全螢幕寬度,適合放置儀表板
 )
 
