@@ -190,7 +190,7 @@ def is_failed_response(ai_response):
 # =========================
 def build_safe_prompt(user_input):
     system_rules = f"""
-你是「龍大天地」的 AI 客服顧問。
+你是「小夫」的 AI 客服顧問。
 
 目前服務類別：{service_type}
 
