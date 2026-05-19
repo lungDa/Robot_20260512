@@ -24,15 +24,15 @@ with st.sidebar:
 import time
 # 使用 st.status 呈現專業的多步驟處理過程
 with st.status("AI 正在思考中...", expanded=True) as status:
-st.write("正在讀取 Gemini API Key...")
-time.sleep(1)
-st.write("正在掃描輸入內容安全性...")
-time.sleep(1)
-st.write("正在生成最佳回覆內容...")
-time.sleep(1)
-status.update(label="回覆生成成功!", state="complete", expanded=False)
-# 或者是使用 st.empty() 進行簡單的原地內容更新
-placeholder = st.empty()
-placeholder.warning(" 正在思考中...")
-time.sleep(2)
-placeholder.success(" 回覆完成!")
+  st.write("正在讀取 Gemini API Key...")
+  time.sleep(1)
+  st.write("正在掃描輸入內容安全性...")
+  time.sleep(1)
+  st.write("正在生成最佳回覆內容...")
+  time.sleep(1)
+  status.update(label="回覆生成成功!", state="complete", expanded=False)
+  # 或者是使用 st.empty() 進行簡單的原地內容更新
+  placeholder = st.empty()
+  placeholder.warning(" 正在思考中...")
+  time.sleep(2)
+  placeholder.success(" 回覆完成!")
