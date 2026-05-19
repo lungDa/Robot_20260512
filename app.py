@@ -240,7 +240,7 @@ def get_safe_response_stream(user_input):
 # 主畫面
 # =========================
 st.markdown(
-    '<div class="main-title">AI 客服 - 龍大天地</div>',
+    '<div class="main-title">AI 客服-電技部</div>',
     unsafe_allow_html=True
 )
 
