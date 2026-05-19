@@ -116,7 +116,7 @@ if "messages" not in st.session_state:
 # Gmail URL
 # =========================
 def make_gmail_url(user_question=""):
-    to_email = "service@mid-taiwan.edu.tw"
+    to_email = "willy_huang@retech.com.tw"
     subject = "AI 客服自動轉接信"
     body = f"""您好：
 
