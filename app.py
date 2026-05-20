@@ -344,7 +344,7 @@ safety_settings = {
 }
 
 model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
+    model_name="gemini-3.1-flash_lite",
     generation_config={
         "temperature": temp,
         "top_p": 0.9,
