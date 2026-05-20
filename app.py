@@ -355,7 +355,7 @@ model = genai.GenerativeModel(
 )
 
 vision_model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
+    model_name="gemini-3.1-flash-lite",
     safety_settings=safety_settings
 )
 
