@@ -15,9 +15,9 @@ from email.mime.multipart import MIMEMultipart
 # 頁面設定
 # =========================
 st.set_page_config(
-    page_title="AI客服-電技部",
+    page_title="鋒霈AI客服",
     page_icon="💻",
-    layout="centered"
+    layout="wide"
 )
 
 DB_PATH = "customer_service.db"
