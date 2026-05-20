@@ -258,7 +258,7 @@ st.markdown("""
 with st.sidebar:
     st.image(
         "https://www.retech.com.tw/static/images/logo-w.svg?v=2025",
-        caption="電力技術部"
+        caption=" "
     )
 
     st.title("系統控制台")
@@ -612,7 +612,7 @@ def get_safe_response_stream(user_input):
 # 主畫面
 # =========================
 st.markdown(
-    '<div class="main-title">AI 客服-電技部</div>',
+    '<div class="main-title">鋒霈 AI 客服</div>',
     unsafe_allow_html=True
 )
 
