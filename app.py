@@ -829,24 +829,13 @@ else:
         make_gmail_url(st.session_state.last_user_question)
     )
 
-#=========================================================
-#手動寄送客服紀錄功能
-#=========================================================
-st.divider()
-if st.button("結束對話並寄送客服紀錄"):
-    if st.session_state.report_sent:
-        st.info("此筆客服紀錄已經寄送過，不會重複寄送。")
-    else:
-        success, message = send_report_to_service()
-
-        if success:
-            st.success(message)
-        else:
-            st.error(message)
-
 # =========================================================
 # Chat Input
 # =========================================================
+if st.session_state.conversation_closed:
+    st.success("此案件已結案並轉交客服，請等待客服回覆。")
+    st.stop()
+
 if prompt := st.chat_input("請輸入問題..."):
 
     if st.session_state.auto_mail_sent:
@@ -916,16 +905,30 @@ if prompt := st.chat_input("請輸入問題..."):
     save_message(st.session_state.ticket_id, "assistant", full_response)
 
     if (
+    (
         st.session_state.clarify_count >= 3
-        and valid_issue
-        and not st.session_state.auto_mail_sent
-    ):
+        or "轉由真人客服" in full_response
+        or "建議轉接真人客服" in full_response
+    )
+    and valid_issue
+    and not st.session_state.auto_mail_sent
+):
         success, message = send_report_to_service()
 
         if success:
+        save_ticket(
+            st.session_state.ticket_id,
+            st.session_state.customer_info,
+            service_type,
+            st.session_state.problem_category,
+            st.session_state.severity,
+            st.session_state.assigned_to,
+            status="已轉真人客服"
+        )        
             st.session_state.auto_mail_sent = True
             st.session_state.report_sent = True
-
+            st.session_state.conversation_closed = True
+            
             handoff_msg = "已收到您的問題，系統已將對話紀錄轉交真人客服協助處理。"
 
             st.session_state.messages.append({
