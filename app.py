@@ -826,16 +826,16 @@ else:
         make_gmail_url(st.session_state.last_user_question)
     )
 
-# =========================================================
-# 手動寄送客服紀錄功能（暫時停用）
-# =========================================================
-# st.divider()
-# if st.button("結束對話並寄送客服紀錄"):
-#     success, message = send_report_to_service()
-#     if success:
-#         st.success(message)
-#     else:
-#         st.error(message)
+#=========================================================
+#手動寄送客服紀錄功能（暫時停用）
+#=========================================================
+ st.divider()
+ if st.button("結束對話並寄送客服紀錄"):
+     success, message = send_report_to_service()
+     if success:
+         st.success(message)
+     else:
+           st.error(message)
 
 # =========================================================
 # Chat Input
