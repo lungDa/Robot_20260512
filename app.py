@@ -328,7 +328,7 @@ def build_safe_prompt(user_input):
     info = st.session_state.customer_info
 
     system_rules = f"""
-你是「小夫」的 AI 客服顧問。
+你是「鋒霈環境科技」的 AI 客服顧問。
 
 目前服務類別：{service_type}
 目前問題分類：{st.session_state.problem_category}
