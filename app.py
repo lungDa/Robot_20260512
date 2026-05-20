@@ -36,7 +36,7 @@ from email.mime.multipart import MIMEMultipart
 st.set_page_config(
     page_title="AI客服-電技部",
     page_icon="💻",
-    layout="centered"
+    layout="wide"
 )
 
 # =========================
