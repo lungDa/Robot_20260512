@@ -206,6 +206,7 @@ default_states = {
     "problem_category": "水務",
     "report_sent": False,
     "auto_mail_sent": False,
+    "conversation_closed": False,
     "ticket_id": "",
     "ocr_text": "",
     "severity": "低",
@@ -215,7 +216,8 @@ default_states = {
 for key, value in default_states.items():
     if key not in st.session_state:
         st.session_state[key] = value
-
+if "conversation_closed" not in st.session_state:
+    st.session_state.conversation_closed = False
 # =========================================================
 # CSS
 # =========================================================
@@ -296,6 +298,7 @@ with st.sidebar:
     # st.metric("AI 追問次數", st.session_state.clarify_count)
 
     if st.button("清除對話紀錄"):
+        st.session_state.conversation_closed = False
         st.session_state.messages = []
         st.session_state.fail_count = 0
         st.session_state.clarify_count = 0
@@ -305,6 +308,7 @@ with st.sidebar:
         st.rerun()
 
     if st.button("重新填寫客戶資料"):
+        st.session_state.conversation_closed = False
         st.session_state.customer_info_done = False
         st.session_state.customer_info = {}
         st.session_state.messages = []
