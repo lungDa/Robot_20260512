@@ -559,12 +559,15 @@ if prompt := st.chat_input("請輸入問題..."):
         "content": full_response
     })
 
-    if st.session_state.fail_count >= 3 and not st.session_state.report_sent:
-        success, message = send_report_to_service()
-
-        if success:
-            st.warning("AI 已連續多次無法理解，對話紀錄已自動寄送客服。")
-        else:
-            st.error(message)
+# =========================
+# AI 失敗自動寄送客服（暫時停用）
+# =========================
+#    if st.session_state.fail_count >= 3 and not st.session_state.report_sent:
+#        success, message = send_report_to_service()
+#
+#        if success:
+#            st.warning("AI 已連續多次無法理解，對話紀錄已自動寄送客服。")
+#        else:
+#            st.error(message)
 
     st.rerun()
