@@ -491,6 +491,8 @@ def make_gmail_url(user_question=""):
 
 
 def send_report_to_service():
+    if st.session_state.report_sent:
+        return False, "此筆客服紀錄已經寄送過，系統不會重複寄送。"
     smtp_host = st.secrets.get("SMTP_HOST", "")
     smtp_port = int(st.secrets.get("SMTP_PORT", 587))
     smtp_user = st.secrets.get("SMTP_USER", "")
@@ -828,15 +830,19 @@ else:
     )
 
 #=========================================================
-#手動寄送客服紀錄功能（暫時停用）
+#手動寄送客服紀錄功能
 #=========================================================
 st.divider()
 if st.button("結束對話並寄送客服紀錄"):
-     success, message = send_report_to_service()
-     if success:
-         st.success(message)
-     else:
-           st.error(message)
+    if st.session_state.report_sent:
+        st.info("此筆客服紀錄已經寄送過，不會重複寄送。")
+    else:
+        success, message = send_report_to_service()
+
+        if success:
+            st.success(message)
+        else:
+            st.error(message)
 
 # =========================================================
 # Chat Input
