@@ -916,15 +916,15 @@ if prompt := st.chat_input("請輸入問題..."):
         success, message = send_report_to_service()
 
         if success:
-        save_ticket(
-            st.session_state.ticket_id,
-            st.session_state.customer_info,
-            service_type,
-            st.session_state.problem_category,
-            st.session_state.severity,
-            st.session_state.assigned_to,
-            status="已轉真人客服"
-        )        
+            save_ticket(
+                st.session_state.ticket_id,
+                st.session_state.customer_info,
+                service_type,
+                st.session_state.problem_category,
+                st.session_state.severity,
+                st.session_state.assigned_to,
+                status="已轉真人客服"
+            )        
             st.session_state.auto_mail_sent = True
             st.session_state.report_sent = True
             st.session_state.conversation_closed = True
