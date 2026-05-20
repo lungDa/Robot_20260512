@@ -301,8 +301,8 @@ with st.sidebar:
     st.divider()
     st.info(f"當前連線：{service_type}")
     st.info(f"問題分類：{st.session_state.problem_category}")
-    st.info(f"AI 靈敏度：{temp}")
-    st.metric("AI 回答失敗次數", st.session_state.fail_count)
+  #  st.info(f"AI 靈敏度：{temp}")
+  #  st.metric("AI 回答失敗次數", st.session_state.fail_count)
 
     if st.session_state.ticket_id:
         st.success(f"工單：{st.session_state.ticket_id}")
