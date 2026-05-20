@@ -118,12 +118,6 @@ with st.sidebar:
 
     st.session_state.problem_category = problem_category
 
-    problem_category = st.selectbox(
-        "請選擇問題分類:",
-        ["水務", "機構", "電力", "案子需求"]
-    )
-
-
     st.divider()
     st.info(f"當前連線：{service_type}")
     st.info(f"問題分類：{st.session_state.problem_category}")
