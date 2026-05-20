@@ -66,8 +66,46 @@ if "report_sent" not in st.session_state:
 # =========================
 # CSS 美化
 # =========================
+#st.markdown("""
+#<style>
+#.main-title {
+#    text-align: center;
+#    font-size: 36px;
+#    font-weight: 800;
+#    margin-top: 20px;
+#}
+#
+#.sub-title {
+#    text-align: center;
+#    font-size: 18px;
+#    color: #666;
+#    margin-bottom: 30px;
+#}
+#
+#.block-container {
+#    padding-top: 2rem;
+#    padding-bottom: 6rem;
+#}
+#
+#.stChatInput {
+#    max-width: 900px;
+#    margin: auto;
+#}
+#</style>
+#""", unsafe_allow_html=True)
 st.markdown("""
 <style>
+
+/* Sidebar 背景 */
+[data-testid="stSidebar"] {
+    background-color: #d9d9d9;
+}
+
+/* Sidebar 文字 */
+[data-testid="stSidebar"] * {
+    color: black;
+}
+
 .main-title {
     text-align: center;
     font-size: 36px;
@@ -91,9 +129,9 @@ st.markdown("""
     max-width: 900px;
     margin: auto;
 }
+
 </style>
 """, unsafe_allow_html=True)
-
 # =========================
 # Sidebar
 # =========================
