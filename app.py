@@ -122,7 +122,7 @@ with st.sidebar:
     st.divider()
     st.info(f"當前連線：{service_type}")
     st.info(f"問題分類：{st.session_state.problem_category}")
-    st.metric("AI 回答失敗次數", st.session_state.fail_count)
+   # st.metric("AI 回答失敗次數", st.session_state.fail_count)
 
     if st.button("清除對話紀錄"):
         st.session_state.messages = []
