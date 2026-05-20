@@ -106,7 +106,7 @@ with st.sidebar:
 
     st.session_state.problem_category = problem_category
 
-    temp = st.slider("AI 靈活度 Temperature", 0.0, 1.0, 0.7)
+    #temp = st.slider("AI 靈活度 Temperature", 0.0, 1.0, 0.7)
 
     st.divider()
     st.info(f"當前連線：{service_type}")
