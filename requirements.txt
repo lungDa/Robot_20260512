@@ -1,4 +1,7 @@
 streamlit
 google-generativeai
-thefuzz
-python-Levenshtein
+pillow
+numpy
+line-bot-sdk
+fastapi
+uvicorn
