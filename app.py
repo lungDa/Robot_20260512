@@ -15,9 +15,9 @@ from email.mime.multipart import MIMEMultipart
 # 頁面設定
 # =========================
 st.set_page_config(
-    page_title="鋒霈AI客服",
+    page_title="鋒霈 AI客服",
     page_icon="💻",
-    layout="wide"
+    layout="centered"
 )
 
 DB_PATH = "customer_service.db"
@@ -180,38 +180,25 @@ add_default_knowledge()
 # =========================
 # Session State 初始化
 # =========================
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+default_states = {
+    "messages": [],
+    "fail_count": 0,
+    "clarify_count": 0,
+    "last_user_question": "",
+    "customer_info_done": False,
+    "customer_info": {},
+    "problem_category": "水務",
+    "report_sent": False,
+    "auto_mail_sent": False,
+    "ticket_id": "",
+    "ocr_text": "",
+    "severity": "低",
+    "assigned_to": ""
+}
 
-if "fail_count" not in st.session_state:
-    st.session_state.fail_count = 0
-
-if "last_user_question" not in st.session_state:
-    st.session_state.last_user_question = ""
-
-if "customer_info_done" not in st.session_state:
-    st.session_state.customer_info_done = False
-
-if "customer_info" not in st.session_state:
-    st.session_state.customer_info = {}
-
-if "problem_category" not in st.session_state:
-    st.session_state.problem_category = "水務"
-
-if "report_sent" not in st.session_state:
-    st.session_state.report_sent = False
-
-if "ticket_id" not in st.session_state:
-    st.session_state.ticket_id = ""
-
-if "ocr_text" not in st.session_state:
-    st.session_state.ocr_text = ""
-
-if "severity" not in st.session_state:
-    st.session_state.severity = "低"
-
-if "assigned_to" not in st.session_state:
-    st.session_state.assigned_to = ""
+for key, value in default_states.items():
+    if key not in st.session_state:
+        st.session_state[key] = value
 
 # =========================
 # CSS
@@ -258,7 +245,7 @@ st.markdown("""
 with st.sidebar:
     st.image(
         "https://www.retech.com.tw/static/images/logo-w.svg?v=2025",
-        caption=" "
+        caption="電力技術部"
     )
 
     st.title("系統控制台")
@@ -286,15 +273,18 @@ with st.sidebar:
     st.info(f"當前連線：{service_type}")
     st.info(f"問題分類：{st.session_state.problem_category}")
 
-    # AI 靈敏度與失敗次數隱藏，但功能仍保留
+    # 隱藏但功能保留
     # st.info(f"AI 靈敏度：{temp}")
     # st.metric("AI 回答失敗次數", st.session_state.fail_count)
+    # st.metric("AI 追問次數", st.session_state.clarify_count)
 
     if st.button("清除對話紀錄"):
         st.session_state.messages = []
         st.session_state.fail_count = 0
+        st.session_state.clarify_count = 0
         st.session_state.last_user_question = ""
         st.session_state.report_sent = False
+        st.session_state.auto_mail_sent = False
         st.rerun()
 
     if st.button("重新填寫客戶資料"):
@@ -302,8 +292,10 @@ with st.sidebar:
         st.session_state.customer_info = {}
         st.session_state.messages = []
         st.session_state.fail_count = 0
+        st.session_state.clarify_count = 0
         st.session_state.last_user_question = ""
         st.session_state.report_sent = False
+        st.session_state.auto_mail_sent = False
         st.session_state.ticket_id = ""
         st.session_state.ocr_text = ""
         st.session_state.severity = "低"
@@ -332,15 +324,15 @@ model = genai.GenerativeModel(
     model_name="gemini-3.1-flash-lite",
     generation_config={
         "temperature": temp,
-        "top_p": 0.9,
-        "top_k": 40,
+        "top_p": 1.0,
+        "top_k": 50,
         "max_output_tokens": 1024,
     },
     safety_settings=safety_settings
 )
 
 vision_model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
+    model_name="gemini-2.5-flash",
     safety_settings=safety_settings
 )
 
@@ -376,8 +368,19 @@ def auto_assign(problem_category, severity):
 
     return dispatch_map.get(problem_category, "客服人員")
 
+
+def is_valid_service_issue(user_input):
+    valid_keywords = [
+        "水", "泵浦", "水壓", "水位", "流量", "閥", "管線", "漏水",
+        "馬達", "異音", "卡住", "軸承", "皮帶", "齒輪", "機構",
+        "電", "跳電", "PLC", "變頻器", "斷路器", "保險絲", "電壓", "電流",
+        "警報", "異常", "故障", "無法啟動", "停機", "設備"
+    ]
+
+    return any(keyword in user_input for keyword in valid_keywords)
+
 # =========================
-# 對話紀錄報告
+# 對話紀錄報告 / Mail
 # =========================
 def build_conversation_report():
     info = st.session_state.customer_info
@@ -415,6 +418,8 @@ AI 客服對話紀錄
 服務類別：{service_type}
 問題分類：{st.session_state.problem_category}
 AI 回答失敗次數：{st.session_state.fail_count}
+AI 追問次數：{st.session_state.clarify_count}
+是否已自動寄信：{st.session_state.auto_mail_sent}
 
 ====================
 OCR 圖片辨識
@@ -479,7 +484,7 @@ def send_report_to_service():
         return False, f"寄送失敗：{e}"
 
 # =========================
-# AI 失敗判斷
+# AI 判斷
 # =========================
 def is_failed_response(ai_response):
     failed_keywords = [
@@ -495,6 +500,23 @@ def is_failed_response(ai_response):
     ]
 
     return any(keyword in ai_response for keyword in failed_keywords)
+
+
+def is_clarifying_response(ai_response):
+    clarify_keywords = [
+        "請確認",
+        "請提供",
+        "請問",
+        "是否有",
+        "能否提供",
+        "需要知道",
+        "請補充",
+        "請先確認",
+        "麻煩提供",
+        "建議先確認"
+    ]
+
+    return any(keyword in ai_response for keyword in clarify_keywords)
 
 # =========================
 # OCR 圖片辨識
@@ -540,13 +562,14 @@ def build_safe_prompt(user_input):
     )
 
     system_rules = f"""
-你是「鋒霈環境科技」的 AI 客服顧問。
+你是「小夫」的 AI 客服顧問。
 
 目前工單編號：{st.session_state.ticket_id}
 目前服務類別：{service_type}
 目前問題分類：{st.session_state.problem_category}
 嚴重度：{severity}
 建議派工：{assigned_to}
+目前 AI 已追問次數：{st.session_state.clarify_count}
 
 客戶資料：
 地點：{info.get("location", "")}
@@ -575,11 +598,13 @@ OCR 圖片辨識結果：
 11. 如果是機構問題，優先確認馬達、傳動、軸承、皮帶、齒輪、異音、卡滯、潤滑狀態。
 12. 如果是電力問題，優先確認電源、斷路器、保險絲、控制盤、PLC、變頻器、警報碼、電壓電流。
 13. 如果是投訴建議，請先安撫使用者，再提供處理方式。
-14. 如果資訊不足，請提出 1～2 個明確問題。
-15. 如果真的無法回答，請回答：「抱歉，我不知道，建議轉接真人客服。」
-16. 不要亂編答案。
-17. 請不要在回覆中顯示工單編號、嚴重度、建議派工。
-18. 工單編號、嚴重度、建議派工只供系統後台與客服信件使用。
+14. 如果資訊不足，最多只能追問使用者 3 次。
+15. 如果已經追問 3 次仍無法判斷，請回答：「已收到您的問題，將轉由真人客服協助處理。」
+16. 不要重複詢問相同問題。
+17. 如果真的無法回答，請回答：「抱歉，我不知道，建議轉接真人客服。」
+18. 不要亂編答案。
+19. 請不要在回覆中顯示工單編號、嚴重度、建議派工。
+20. 工單編號、嚴重度、建議派工只供系統後台與客服信件使用。
 """
 
     final_prompt = f"""
@@ -612,7 +637,7 @@ def get_safe_response_stream(user_input):
 # 主畫面
 # =========================
 st.markdown(
-    '<div class="main-title">鋒霈 AI 客服</div>',
+    '<div class="main-title">AI 客服-電技部</div>',
     unsafe_allow_html=True
 )
 
@@ -701,7 +726,7 @@ with st.expander("已登錄客戶資料", expanded=False):
     st.write(f"**問題分類：** {st.session_state.problem_category}")
 
 # =========================
-# OCR 圖片辨識
+# 圖片辨識
 # =========================
 st.markdown("### 圖片辨識")
 
@@ -749,7 +774,9 @@ for msg in st.session_state.messages:
 # =========================
 # 客服轉接區
 # =========================
-if st.session_state.fail_count >= 3:
+if st.session_state.auto_mail_sent:
+    st.success("系統已將此案件轉交真人客服協助處理。")
+elif st.session_state.fail_count >= 3:
     st.warning("AI 目前無法有效判斷您的問題，建議直接由真人客服協助。")
     st.link_button(
         "開啟 Gmail 草稿",
@@ -762,7 +789,7 @@ else:
     )
 
 # =========================
-# 客服紀錄寄送功能（暫時停用）
+# 手動寄送客服紀錄功能（暫時停用）
 # =========================
 # st.divider()
 # if st.button("結束對話並寄送客服紀錄"):
@@ -776,6 +803,10 @@ else:
 # Chat Input
 # =========================
 if prompt := st.chat_input("請輸入問題..."):
+
+    if st.session_state.auto_mail_sent:
+        st.warning("此案件已轉交真人客服，請等待客服回覆。")
+        st.stop()
 
     st.session_state.last_user_question = prompt
 
@@ -825,6 +856,13 @@ if prompt := st.chat_input("請輸入問題..."):
     else:
         st.session_state.fail_count = 0
 
+    if is_clarifying_response(full_response):
+        st.session_state.clarify_count += 1
+
+    valid_issue = is_valid_service_issue(
+        prompt + "\n" + st.session_state.ocr_text
+    )
+
     st.session_state.messages.append({
         "role": "assistant",
         "content": full_response
@@ -832,14 +870,33 @@ if prompt := st.chat_input("請輸入問題..."):
 
     save_message(st.session_state.ticket_id, "assistant", full_response)
 
-    # =========================
-    # AI 失敗自動寄送客服（暫時停用）
-    # =========================
-    # if st.session_state.fail_count >= 3 and not st.session_state.report_sent:
-    #     success, message = send_report_to_service()
-    #     if success:
-    #         st.warning("AI 已連續多次無法理解，對話紀錄已自動寄送客服。")
-    #     else:
-    #         st.error(message)
+    if (
+        st.session_state.clarify_count >= 3
+        and valid_issue
+        and not st.session_state.auto_mail_sent
+    ):
+        success, message = send_report_to_service()
+
+        if success:
+            st.session_state.auto_mail_sent = True
+            st.session_state.report_sent = True
+
+            handoff_msg = "已收到您的問題，系統已將對話紀錄轉交真人客服協助處理。"
+
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": handoff_msg
+            })
+
+            save_message(
+                st.session_state.ticket_id,
+                "assistant",
+                handoff_msg
+            )
+
+            st.warning(handoff_msg)
+
+        else:
+            st.error(message)
 
     st.rerun()
