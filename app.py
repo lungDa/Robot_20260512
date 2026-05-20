@@ -99,14 +99,30 @@ with st.sidebar:
         ["一般諮詢", "技術支援", "投訴建議"]
     )
 
+    # =========================
+    # AI 靈活度自動切換
+    # =========================
+    if service_type == "一般諮詢":
+        temp = 0.3
+
+    elif service_type == "技術支援":
+        temp = 0.6
+
+    elif service_type == "投訴建議":
+        temp = 1.0
+
+    problem_category = st.selectbox(
+        "請選擇問題分類:",
+        ["水務", "機構", "電力"]
+    )
+
+    st.session_state.problem_category = problem_category
+
     problem_category = st.selectbox(
         "請選擇問題分類:",
         ["水務", "機構", "電力", "案子需求"]
     )
 
-    st.session_state.problem_category = problem_category
-
-    #temp = st.slider("AI 靈活度 Temperature", 0.0, 1.0, 0.7)
 
     st.divider()
     st.info(f"當前連線：{service_type}")
