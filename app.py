@@ -708,18 +708,7 @@ if not st.session_state.customer_info_done:
         company = st.text_input("公司名稱")
         contact_person = st.text_input("聯絡人")
         phone = st.text_input("聯絡電話")
-        equipment_required = not (
-            service_type == "專案需求諮詢"
-            or st.session_state.problem_category == "需求與條件"
-        )
-
-        equipment_label = (
-            "設備名稱 *"
-            if equipment_required
-            else "設備名稱（選填：專案需求諮詢或需求與條件可留空）"
-        )
-
-        equipment = st.text_input(equipment_label)
+        equipment = st.text_input("設備名稱(若無,可不填寫)")
 
         submit_customer = st.form_submit_button("開始對話並建立工單")
 
@@ -729,7 +718,7 @@ if not st.session_state.customer_info_done:
                 and company.strip()
                 and contact_person.strip()
                 and phone.strip()
-                and (equipment.strip() or not equipment_required)
+                and equipment.strip()
             ):
                 ticket_id = (
                     "TK-"
@@ -767,10 +756,7 @@ if not st.session_state.customer_info_done:
                 st.rerun()
 
             else:
-                if equipment_required:
-                    st.error("請完整填寫所有欄位。")
-                else:
-                    st.error("請填寫地點、公司名稱、聯絡人及聯絡電話。")
+                st.error("請完整填寫所有欄位。")
 
     st.stop()
 
